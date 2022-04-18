@@ -9,12 +9,12 @@ class SignUpView(View):
         data = json.loads(request.body)
 
         try:
-            email = data['email']
-            password = data['password']
+            email         = data['email']
+            password      = data['password']
             mobile_number = data['mobile_number']
 
-            REGEX_EMAIL =         '^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-            REGEX_PASSWORD =      "^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$"
+            REGEX_EMAIL         = '^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+            REGEX_PASSWORD      = '^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$'
             REGEX_MOBILE_NUMBER = '^([+]\d{2})?\d{10}$'
 
             if not re.match(REGEX_EMAIL, email):
@@ -27,12 +27,12 @@ class SignUpView(View):
                 return JsonResponse({"message": "EMAIL_ALREADY_EXISTS"}, status=400)
 
             User.objects.create(
-                name 		 = data['name'],
-                email	 	 = data['email'],
-                password	 = data['password'],
+                name 		  = data['name'],
+                email	 	  = data['email'],
+                password	  = data['password'],
                 mobile_number = data['mobile_number'], 
 			)
 
             return JsonResponse({"message": "SUCCESS"}, status=201)
-        except:
+        except KeyError:
             return JsonResponse({"message": "KEY_ERROR"}, status=400)
