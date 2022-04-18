@@ -4,7 +4,7 @@ import re
 from django.http            import JsonResponse
 from django.views           import View
 from users.models           import User
-from .validation            import blank, email_validate, password_validate, phonenumber_validate
+from .validation            import email_validate, password_validate, phonenumber_validate
 from django.core.exceptions import ValidationError
 
 class SignUpView(View):
@@ -16,7 +16,6 @@ class SignUpView(View):
             password        = data['password']
             phone_number    = data['phone_number'] 
 
-            blank(email, password) 
             email_validate(email)
             password_validate(password)
             phonenumber_validate(phone_number)
@@ -28,6 +27,10 @@ class SignUpView(View):
                 phone_number    = data['phone_number'] 
                 )
             return JsonResponse({"message": "SUCCESS"}, status=201)
+
+        except KeyError:
+            return JsonResponse({'message' : 'KEY_ERROR'}, status=400)
+
         except ValidationError as err:
             return JsonResponse({"message": err.messages}, status=400)
 
