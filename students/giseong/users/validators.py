@@ -19,19 +19,15 @@ def validate_password(password):
 
 
 def exist_email(email):
-    users_DB    = User.objects.all()
-    email_exist = users_DB.filter(email=email).exists()
+    email_exist = User.objects.filter(email=email).exists()
 
     if email_exist:
         raise ValidationError('EXIST_EMAIL', code=400)
 
 def match_user(email, password):
-    users_DB       = User.objects.all()
-    email_exist    = users_DB.filter(email=email).exists()
-    match_password = users_DB.filter(email=email, password=password).exists()
+    email_exist    = User.objects.filter(email=email).exists()
+    match_password = User.objects.filter(email=email, password=password).exists()
 
-    if not email_exist:
+    if not email_exist or not match_password:
         raise ValidationError('INVALID_USER', code=401)
 
-    if not match_password:
-        raise ValidationError('INVALID_USER', code=401)
