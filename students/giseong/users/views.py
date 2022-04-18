@@ -7,10 +7,10 @@ from users.models      import User
 
 from django.core.exceptions import ValidationError
 from users.validators       import (
-    validate_email,
-    validate_password,
-    exist_email
-)
+                                validate_email,
+                                validate_password,
+                                exist_email
+                            )
 
 
 class SignUpView(View):
