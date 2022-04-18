@@ -7,7 +7,7 @@ from django.http  import JsonResponse
 def email_validate(email):
     regexr_email = '^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     if re.match(regexr_email, email) == None:
-        raise ValidationError("ERROR_EMAIL_NEED_@_AND_.")
+        raise ValidationError("INVALID_EMAIL")
 
 def password_validate(password):
     regexr_password = '^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z0-9$@$!%*#?&].{8,}$'
