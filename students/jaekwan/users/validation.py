@@ -17,9 +17,9 @@ def validate_email(email):
         raise ValidationError("EMAIL_EXISTS_ERROR")
 
 def validate_password(password):
-    if not re.match(EMAIL_REGEX, password):
+    if not re.match(PASSWORD_REGEX, password):
         raise ValidationError("PASSWORD_ERROR")
 
 def validate_mobile_number(mobile_number):
-    if not re.match(EMAIL_REGEX, mobile_number):
+    if not re.match(MOBILE_NUMBER_REGEX, mobile_number):
         raise ValidationError("MOBILE_NUMBER_ERROR")
