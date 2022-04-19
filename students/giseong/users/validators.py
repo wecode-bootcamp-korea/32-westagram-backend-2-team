@@ -12,7 +12,7 @@ def validate_email(email):
     if not re.match(REGEX_EMAIL, email):
         raise ValidationError('INVALID_EMAIL', code=400)
 
-    if not User.objects.filter(email=email).exists():
+    if User.objects.filter(email=email).exists():
         raise ValidationError('EXIST_EMAIL', code=400)
 
 def validate_password(password):

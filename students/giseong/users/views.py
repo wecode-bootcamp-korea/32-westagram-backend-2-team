@@ -44,7 +44,7 @@ class LogInView(View):
         try:
             data = json.loads(request.body)
 
-            if not User.objects.filter(email=data['email'], password=data['password']).exists()
+            if not User.objects.filter(email=data['email'], password=data['password']).exists():
                 raise ValidationError('INVALID_USER', code=401)
 
             return JsonResponse({'message' : 'SUCCESS'}, status=200)
