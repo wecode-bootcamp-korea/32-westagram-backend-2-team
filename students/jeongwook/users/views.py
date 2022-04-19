@@ -51,4 +51,4 @@ class LogInView(View):
             return JsonResponse({'message' : 'KEY_ERROR'}, status=400)
         
         except ValidationError as err:
-            return JsonResponse({"message": err.messages}, status=400)
+            return JsonResponse({"message": err.messages}, status=401)
