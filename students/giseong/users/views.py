@@ -25,7 +25,7 @@ class SignUpView(View):
 
             validate_email(email)
             validate_password(password)
-            exist_email(phone_number)
+            exist_email(email)
 
             User.objects.create(
                 name         = data['name'],
