@@ -1,7 +1,6 @@
 import re
 
 from django.core.exceptions import ValidationError
-from django.http            import JsonResponse
 
 def email_validate(email):
     REGEXR_EMAIL = '^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
