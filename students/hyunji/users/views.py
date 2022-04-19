@@ -1,4 +1,3 @@
-from ast import AsyncFunctionDef
 from django.http    import JsonResponse
 from django.views   import View
 from users.models   import User
@@ -43,7 +42,7 @@ class LogInView(View):
         try:
             email    = data['email']
             password = data['password']
-            
+
             if User.objects.filter(email=email, password=password).exists():
                 return JsonResponse({"message": "SUCCESS"}, status=200)
             else:
