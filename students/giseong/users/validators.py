@@ -12,21 +12,9 @@ def validate_email(email):
     if not re.match(REGEX_EMAIL, email):
         raise ValidationError('INVALID_EMAIL', code=400)
 
+    if not User.objects.filter(email=email).exists():
+        raise ValidationError('EXIST_EMAIL', code=400)
 
 def validate_password(password):
     if not re.search(REGEX_PASSWORD, password):
         raise ValidationError('INVALID_PASSWORD', code=400)
-
-
-def exist_email(email):
-    email_exist = User.objects.filter(email=email).exists()
-
-    if email_exist:
-        raise ValidationError('EXIST_EMAIL', code=400)
-
-def match_user(email, password):
-    match_password = User.objects.filter(email=email, password=password).exists()
-
-    if not match_password:
-        raise ValidationError('INVALID_USER', code=401)
-

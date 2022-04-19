@@ -9,8 +9,6 @@ from django.core.exceptions import ValidationError
 from users.validators       import (
                                 validate_email,
                                 validate_password,
-                                exist_email,
-                                match_user
                             )
 
 
@@ -25,7 +23,6 @@ class SignUpView(View):
 
             validate_email(email)
             validate_password(password)
-            exist_email(email)
 
             User.objects.create(
                 name         = data['name'],
@@ -47,10 +44,8 @@ class LogInView(View):
         try:
             data = json.loads(request.body)
 
-            email    = data['email']
-            password = data['password']
-
-            match_user(email, password)
+            if not User.objects.filter(email=data['email'], password=data['password']).exists()
+                raise ValidationError('INVALID_USER', code=401)
 
             return JsonResponse({'message' : 'SUCCESS'}, status=200)
 
@@ -59,4 +54,3 @@ class LogInView(View):
 
         except ValidationError as error:
             return JsonResponse({'message' : error.message}, status=error.code)
-
