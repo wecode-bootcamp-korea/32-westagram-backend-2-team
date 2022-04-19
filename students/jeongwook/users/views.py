@@ -37,11 +37,10 @@ class SignUpView(View):
 
 class LogInView(View):
     def post(self, request):
-        data      = json.loads(request.body)
+        data = json.loads(request.body)
         try: 
-
             password = data['password']
-            email = data["email"]
+            email    = data["email"]
 
             user_match(email, password)
 

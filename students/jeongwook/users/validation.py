@@ -24,7 +24,6 @@ def phonenumber_validate(phone_number):
 def user_match(email, password):
     match_email    = User.objects.filter(email=email).exists()
     match_password = User.objects.filter(password=password).exists()
-
     if not match_email or not match_password:
         raise ValidationError ("INVALID_USER")
 
