@@ -25,9 +25,8 @@ def exist_email(email):
         raise ValidationError('EXIST_EMAIL', code=400)
 
 def match_user(email, password):
-    email_exist    = User.objects.filter(email=email).exists()
     match_password = User.objects.filter(email=email, password=password).exists()
 
-    if not email_exist or not match_password:
+    if not match_password:
         raise ValidationError('INVALID_USER', code=401)
 
