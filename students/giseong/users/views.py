@@ -17,19 +17,20 @@ class SignUpView(View):
         try:
             data = json.loads(request.body)
 
+            name         = data['name']
             email        = data['email']
             password     = data['password']
             phone_number = data['phone_number']
 
-            check = UserEmailValidation()
+            email_check = UserEmailValidation()
 
-            check.regex(email)
-            check.duplicated(email)
+            email_check.regex(email)
+            email_check.duplicated(email)
 
             validate_password(password)
 
             User.objects.create(
-                name         = data['name'],
+                name         = name,
                 email        = email,
                 password     = password,
                 phone_number = phone_number
