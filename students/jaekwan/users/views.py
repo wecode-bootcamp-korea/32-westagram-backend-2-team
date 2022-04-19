@@ -1,9 +1,15 @@
 import json
 import re
-from django.http  import JsonResponse
-from django.views import View
+
+from django.http            import JsonResponse
+from django.core.exceptions import ValidationError
+from django.views           import View
+
+
 from users.models import User
-from .validation   import SignUpValidation
+from .validation  import validate_email, validate_password, validate_mobile_number
+
+
 class SignupView(View):
     def post(self, request):
         try:
@@ -12,23 +18,25 @@ class SignupView(View):
             email         = data['email']
             password      = data['password']
             mobile_number = data['mobile_number']
+            name          = data['name']
 
-            SignUpValidation.validate_email(email)
-            SignUpValidation.validate_password(password)
-            SignUpValidation.validate_mobile_number(mobile_number)
-
-            if User.objects.filter(email=email).exists():
-                return JsonResponse({"message": "EMAIL_EXISTS_ERROR"}, status=400)
+            validate_email(email)
+            validate_password(password)
+            validate_mobile_number(mobile_number)
             
             User.objects.create(
-                name            = data['name'],
-                email           = data['email'],
-                password        = data['password'],
-                mobile_number   = data['mobile_number']
+                name            = name,
+                email           = email,
+                password        = password,
+                mobile_number   = mobile_number
             )
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
+
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+        
+        except ValidationError as err:
+            return JsonResponse({'MESSAGE':err.message}, status=400)
 
 class LoginView(View):
     def post(self, request):
