@@ -1,10 +1,7 @@
 import re
 
 from django.core.exceptions import ValidationError
-
-from django.http  import JsonResponse
-
-from users.models import User
+from django.http            import JsonResponse
 
 def email_validate(email):
     REGEXR_EMAIL = '^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
@@ -20,11 +17,6 @@ def phonenumber_validate(phone_number):
     REGEXR_PHONENUMBER = '^\s*(?:\+?(\d{1,3}))?([-. (]*(\d{3})[-. )]*)?((\d{3})[-. ]*(\d{2,4})(?:[-.x ]*(\d+))?)\s*$'
     if re.match(REGEXR_PHONENUMBER, phone_number) == None:
         raise ValidationError ("PHONENUMBER_ERROR")
-
-def user_match(email, password):
-    match_Information = User.objects.filter(email=email, password=password).exists()
-    if not match_Information:
-        raise ValidationError ("INVALID_USER")
     
 
 
