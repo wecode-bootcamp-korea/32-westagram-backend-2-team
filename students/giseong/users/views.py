@@ -7,7 +7,7 @@ from users.models           import User
 
 from django.core.exceptions import ValidationError
 from users.validators       import (
-                                validate_email,
+                                UserEmailValidation,
                                 validate_password,
                             )
 
@@ -21,7 +21,11 @@ class SignUpView(View):
             password     = data['password']
             phone_number = data['phone_number']
 
-            validate_email(email)
+            check = UserEmailValidation()
+
+            check.regex(email)
+            check.duplicated(email)
+
             validate_password(password)
 
             User.objects.create(
@@ -44,13 +48,13 @@ class LogInView(View):
         try:
             data = json.loads(request.body)
 
-            if not User.objects.filter(email=data['email'], password=data['password']).exists():
-                raise ValidationError('INVALID_USER', code=401)
+            email    = data['email']
+            password = data['password']
+
+            if not User.objects.filter(email=email, password=password).exists():
+                return JsonResponse({'message' : 'INVALID_USER'}, code=401)
 
             return JsonResponse({'message' : 'SUCCESS'}, status=200)
 
         except KeyError:
             return JsonResponse({'message' : 'KEY_ERROR'}, status=400)
-
-        except ValidationError as error:
-            return JsonResponse({'message' : error.message}, status=error.code)
