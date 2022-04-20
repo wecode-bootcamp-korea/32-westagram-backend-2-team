@@ -27,7 +27,7 @@ class SignUpView(View):
                 return JsonResponse({"message": "EMAIL_ALREADY_EXISTS"}, status=400)
 
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-            decoded_hashed_password = hashed_password.decode
+            decoded_hashed_password = hashed_password.decode('utf-8')
 
             User.objects.create(
                 name 		  = data['name'],
