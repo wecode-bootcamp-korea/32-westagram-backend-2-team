@@ -9,8 +9,9 @@ from users.models           import User
 
 from django.core.exceptions import ValidationError
 from users.validators       import (
-                                UserEmailValidation,
+                                validate_email,
                                 validate_password,
+                                duplicated_email
                             )
 
 
@@ -24,11 +25,8 @@ class SignUpView(View):
             password     = data['password']
             phone_number = data['phone_number']
 
-            email_check = UserEmailValidation()
-
-            email_check.regex(email)
-            email_check.duplicated(email)
-
+            validate_email(email)
+            duplicated_email(email)
             validate_password(password)
 
             hashed_password = bcrypt.hashpw(data['password'].encode('UTF-8'), bcrypt.gensalt())
