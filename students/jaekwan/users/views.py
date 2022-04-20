@@ -1,4 +1,5 @@
 import json
+import bcrypt
 
 from django.http            import JsonResponse
 from django.core.exceptions import ValidationError
@@ -13,11 +14,12 @@ class SignupView(View):
     def post(self, request):
         try:
 
-            data          = json.loads(request.body)
-            email         = data['email']
-            password      = data['password']
-            mobile_number = data['mobile_number']
-            name          = data['name']
+            data            = json.loads(request.body)
+            email           = data['email']
+            password        = data['password']
+            mobile_number   = data['mobile_number']
+            name            = data['name']
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
             validate_email(email)
             validate_password(password)
@@ -27,7 +29,7 @@ class SignupView(View):
                 name            = name,
                 email           = email,
                 password        = password,
-                mobile_number   = mobile_number
+                mobile_number   = hashed_password
             )
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
 
