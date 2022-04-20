@@ -5,3 +5,4 @@ bcrypt==3.2.0
 six==1.16.0
 pycparser==2.21
 cffi==1.15.0
+pyjwt==2.3.0

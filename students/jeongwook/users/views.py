@@ -1,16 +1,17 @@
 import json
-import bcrypt
+import bcrypt, jwt
 
 from django.http            import JsonResponse
 from django.views           import View
 from users.models           import User
 from .validation            import email_validate, password_validate, phonenumber_validate
 from django.core.exceptions import ValidationError
+from westagram.settings     import SECRET_KEY
 
 class SignUpView(View):
     def post(self, request):
         data                = json.loads(request.body)
-        hashed_password     = bcrypt.hashpw(data['password'].encode('UTF-8'), bcrypt.gensalt())
+        hashed_password     = bcrypt.hashpw(data['password'].encode('UTF-8'), bcrypt.gensalt()).decode('utf-8')
         
         try: 
             email           = data['email']
@@ -42,11 +43,13 @@ class LogInView(View):
         try: 
             password = data['password']
             email    = data["email"]
+            user     = User.objects.get(email=email)
+            token    = jwt.encode({'user_id': user.id}, SECRET_KEY, algorithm='HS256')
 
-            if not User.objects.filter(email=email, password=password).exists():
-                return JsonResponse({"message": "INVALID_USER"}, status=401)
-            
-            return JsonResponse({"message":"SUCCESS"}, status=200)
+            if not bcrypt.checkpw(password.encode('UTF-8'), user.password.encode('UTF-8')):
+                return JsonResponse({"massage": "INVALID_USER"}, status=401)
+
+            return JsonResponse({'message':'SUCCESS', 'token':token}, status=200)
 
         except KeyError:
             return JsonResponse({'message' : 'KEY_ERROR'}, status=400)
