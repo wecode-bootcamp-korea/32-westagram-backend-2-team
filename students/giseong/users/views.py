@@ -60,7 +60,8 @@ class LogInView(View):
             if not bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
                 return JsonResponse({"message": "INVALID_PASSWORD"}, status=401)
 
-            access_token = jwt.encode({'id' : user.id}, settings.SECRET_KEY, algorithm = settings.ALGORITHM)
+            access_token = jwt.encode({'id' : user.id}, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+            print(access_token)
 
             return JsonResponse({
                 'message'      : 'SUCCESS',
@@ -79,9 +80,10 @@ class TokenCheckView(View):
         try:
             data = json.loads(request.body)
 
-            token_info = jwt.decode(data["token"], settings.SECRET_KEY, algorithm = settings.ALGORITHM)
+            payload = jwt.decode(data['token'], settings.SECRET_KEY, algorithms=settings.ALGORITHM)
+            user = User.objects.get(id=payload['id'])
 
-            if User.objects.filter(email=token_info['email']).exists():
+            if User.objects.filter(id=user.id).exists():
                 return JsonResponse({'message' : 'WELCOME'}, status=200)
 
         except User.DoesNotExist:
