@@ -71,4 +71,24 @@ class LogInView(View):
             return JsonResponse({'message' : 'KEY_ERROR'}, status=400)
 
         except User.DoesNotExist:
-            return JsonResponse({"message": "INVALID_EMAIL"}, status=401)
+            return JsonResponse({"message" : "INVALID_EMAIL"}, status=401)
+
+
+class TokenCheckView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+
+            token_info = jwt.decode(data["token"], settings.SECRET_KEY, algorithm = settings.ALGORITHM)
+
+            if User.objects.filter(email=token_info['email']).exists():
+                return JsonResponse({'message' : 'WELCOME'}, status=200)
+
+        except User.DoesNotExist:
+            return JsonResponse({'message' : 'INVALID_TOKEN'}, status=403)
+
+        except jwt.InvalidSignatureError:
+            return JsonResponse({'message' : 'INVALID_SIGNITURE'}, status=403)
+
+        except jwt.DecodeError:
+            return JsonResponse({'message' : 'INVALID_PAYLOAD'}, status=403)
