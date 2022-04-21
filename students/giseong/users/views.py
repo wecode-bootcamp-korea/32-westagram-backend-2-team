@@ -7,6 +7,7 @@ from django.conf            import settings
 from django.views           import View
 from django.core.exceptions import ValidationError
 
+# from users.utils            impot=
 from users.models           import User
 from users.validators       import (
                                 validate_email,
@@ -80,7 +81,7 @@ class TokenCheckView(View):
         try:
             data = json.loads(request.body)
 
-            payload = jwt.decode(data['token'], settings.SECRET_KEY, algorithms=settings.ALGORITHM)
+            payload = jwt.decode(data['Authorization'], settings.SECRET_KEY, algorithms=settings.ALGORITHM)
             user = User.objects.get(id=payload['id'])
 
             if User.objects.filter(id=user.id).exists():
@@ -90,7 +91,7 @@ class TokenCheckView(View):
             return JsonResponse({'message' : 'INVALID_TOKEN'}, status=403)
 
         except jwt.InvalidSignatureError:
-            return JsonResponse({'message' : 'INVALID_SIGNITURE'}, status=403)
+            return JsonResponse({'message' : 'INVALID_SIGNATURE'}, status=403)
 
         except jwt.DecodeError:
             return JsonResponse({'message' : 'INVALID_PAYLOAD'}, status=403)
